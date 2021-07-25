@@ -17,7 +17,6 @@ input-files:
 # priority over the included ones.
 #defaults:
 
-
 template: pandoc-uikit/standalone.html
 standalone: true
 
@@ -104,7 +103,7 @@ number-offset: [0,0,0,0,0,0]
 shift-heading-level-by: 0
 section-divs: true
 identifier-prefix: foo
-title-prefix: "AZZZZZZZZZZZ"
+title-prefix: ""
 strip-empty-paragraphs: true
 # lf, crlf, or native
 eol: lf

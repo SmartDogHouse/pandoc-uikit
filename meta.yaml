@@ -1,15 +1,11 @@
 ---
-title: 'SmartDogHouse'
+title: SmartDogHouse
 author:
-- Gyordan Caminati
-- Sara Kiade
-- Igor Lirussi
-#keywords: [nothing, nothingness]
+  - Gyordan Caminati
+  - Sara Kiade
+  - Igor Lirussi
 lang: it
-toc-title: "" 
-biblio-title: ""
-abstract: |
-  This is the abstract.
-
-  It consists of two paragraphs.
+toc-title: ''
+biblio-title: ''
+abstract: ''
 ...
