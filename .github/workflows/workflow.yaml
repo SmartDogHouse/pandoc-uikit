@@ -1,0 +1,99 @@
+on:
+  push:
+    branches:
+      - master
+jobs:
+
+ TestJob:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Git repo
+        uses: actions/checkout@v2
+      - name: Test Code current branch
+        shell: bash
+        run: |
+          echo "skip"
+          
+  TelegramJobFailure:
+      needs: [TestJob] #when finished this job
+      if: failure() # if its failed
+      runs-on: ubuntu-latest
+      steps:
+      - name: Send custom Telegram message
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: |
+                ${{ github.event_name }} event,
+                on github.com/${{ github.repository }},
+                by ${{ github.actor }}:
+                <b>${{ github.event.head_commit.message }}</b>
+                ❌ <b>FAILED</b> ❌
+          format: html
+          disable_web_page_preview: true
+
+  TelegramJobSuccess:
+        needs: [TestJob] #when finished this job
+        if: success() #only on success
+        runs-on: ubuntu-latest
+        steps:
+        - name: Send custom Telegram message
+          uses: appleboy/telegram-action@master
+          with:
+            to: ${{ secrets.TELEGRAM_TO }}
+            token: ${{ secrets.TELEGRAM_TOKEN }}
+            message: |
+                ${{ github.event_name }} event,
+                on github.com/${{ github.repository }},
+                by ${{ github.actor }}:
+                <b>${{ github.event.head_commit.message }}</b>
+                ✅ <b>SUCCEDED</b>
+            format: html
+            disable_web_page_preview: true
+            
+  CoverageJob:
+        needs: [TestJob] #when finished this job
+        if: success() #only on success
+        runs-on: ubuntu-latest
+        steps:
+          - name: launch coverage
+            shell: bash
+            run: echo "skip"
+            
+  FindTagJob:
+        needs: TestJob
+        if: success()
+        runs-on: ubuntu-latest
+        # Map a step output to a job output
+        outputs:
+          outputTagJob: ${{ steps.relese_msg.outputs.RELESE_NAME }}
+        steps:
+          - name: Clone Repo with Checkout 
+            uses: actions/checkout@v2 # clones repo! Action implemented in this repository, tag "2"
+          - name: Extract relese message if present
+            shell: bash
+            id: relese_msg
+            run: |
+              echo "::set-output name=RELESE_NAME::$(echo "${{github.event.head_commit.message}}" | grep -o -P '(?<=-TAG{).*(?=})')"
+  DeployJob:
+        needs: FindTagJob
+        if: ${{ needs.FindTagJob.outputs.outputTagJob != '' }} #if environment variable is set
+        runs-on: ubuntu-latest
+        steps:
+          - name: Clone Repo with Checkout 
+            uses: actions/checkout@v2 # clones repo! Action implemented in this repository, tag "2"
+          - name: Create relese if tag commit contain a tag message
+            id: create_release
+            uses: actions/create-release@v1
+            env:
+              GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+            with:
+              tag_name: ${{ needs.FindTagJob.outputs.outputTagJob }}
+              release_name: Release ${{ needs.FindTagJob.outputs.outputTagJob }}
+              draft: false
+              prerelease: false
+              
+              
+     
+
