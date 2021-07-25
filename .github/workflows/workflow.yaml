@@ -36,7 +36,6 @@ jobs:
               echo "::set-output name=RELESE_NAME::$(echo $newval)"
               echo $newval 
           fi
-          
   DeployJob:
     needs: FindTagJob
     if: '${{ needs.FindTagJob.outputs.outputTagJob != '''' }}'
