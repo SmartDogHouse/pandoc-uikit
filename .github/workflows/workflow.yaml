@@ -1,8 +1,10 @@
-'on':
+name: Pandoc-uikit workflow
+on:
   push:
     branches:
       - master
 jobs:
+
   FindTagJob:
     runs-on: ubuntu-latest
     outputs:
@@ -53,6 +55,7 @@ jobs:
           release_name: 'Release ${{ needs.FindTagJob.outputs.outputTagJob }}'
           draft: falses
           prerelease: false
+          
   TelegramJobSuccess:
     needs: DeployJob
     if: success()
