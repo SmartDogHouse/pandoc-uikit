@@ -8,7 +8,7 @@ jobs:
   FindTagJob:
     runs-on: ubuntu-latest
     outputs:
-      outputTagJob: '${{ steps.relese_msg.outputs.RELESE_NAME }}'#The outuput of the job
+      outputTagJob: '${{ steps.relese_msg.outputs.RELESE_NAME }}' #The outuput of the job
     steps:
       - name: Clone Repo with Checkout
         uses: actions/checkout@v2
