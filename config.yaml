@@ -35,7 +35,7 @@ variables:
 #  - Sara Kiade
 #  - Igor Lirussi
 metadata-files: 
-- ./meta.yaml
+- ./pandoc-uikit/meta.yaml
 # or you may use metadata-file: with a single value
 
 # Note that these take files, not their contents:
